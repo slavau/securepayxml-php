@@ -32,11 +32,17 @@ class Response
     private $responseArray;
 
     /**
+     * @var bool Identifies whether our request list was processed.
+     */
+    private $requestProcessed;
+
+    /**
      * Response constructor.
      * @param string $xmlResponse The XML API response from SecurePay
      */
     public function __construct($xmlResponse)
     {
+        $this->requestProcessed = false;
         $this->responseArray = simplexml_load_string($xmlResponse);
         $this->statusCode = $this->responseArray->Status->statusCode;
         $this->statusDesc = $this->responseArray->Status->statusDescription;
@@ -44,6 +50,7 @@ class Response
         if ($this->statusCode == "0" ||
             $this->statusCode == "00" ||
             $this->statusCode == "000") {
+            $this->requestProcessed = true;
             $path = null;
              if ($this->responseArray->RequestType == "Periodic") {
                 $path = $this->responseArray->Periodic->PeriodicList->PeriodicItem;
@@ -134,5 +141,13 @@ class Response
         return $this->responseArray;
     }
 
-
+    /**
+     * Returns true if the status description was 0 (Normal).
+     *
+     * @return boolean
+     */
+    public function isRequestProcessed()
+    {
+        return $this->requestProcessed;
+    }
 }
