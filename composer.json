@@ -1,0 +1,30 @@
+{
+  "name": "securepay/xmlapi-php",
+  "description": "A PHP wrapper for SecurePay's XML API",
+  "type": "library",
+  "minimum-stability": "stable",
+  "version": "1.0",
+  "keywords": ["SecurePay", "Payment", "Gateway", "Credit", "Card", "CreditCard", "XML", "XMLAPI", "API"],
+  "homepage": "https://bengsspace.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Beng Lim",
+      "email": "benglim92@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "5.2.9",
+    "phpdocumentor/phpdocumentor": "2.*"
+  },
+  "require": {
+    "sabre/xml": "^1.4",
+    "inacho/php-credit-card-validator": "1.*"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "SecurePay\\XMLAPI\\" : "lib/"
+    }
+  }
+}
