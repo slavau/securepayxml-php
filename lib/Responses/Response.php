@@ -1,6 +1,7 @@
 <?php
 
 namespace SecurePay\XMLAPI\Responses;
+use SecurePay\XMLAPI\Utils\Configurations;
 
 /**
  * Reads the XML response from the server.
@@ -44,9 +45,10 @@ class Response
     {
         $this->requestProcessed = false;
         $this->responseArray = simplexml_load_string($xmlResponse);
-        $this->statusCode = $this->responseArray->Status->statusCode;
-        $this->statusDesc = $this->responseArray->Status->statusDescription;
+        $this->statusCode = strval($this->responseArray->Status->statusCode);
+        $this->statusDesc = strval($this->responseArray->Status->statusDescription);
         $this->actionList = [];
+        // Checking 0, 00 and 000 as SecurePay can return any of the three variants...
         if ($this->statusCode == "0" ||
             $this->statusCode == "00" ||
             $this->statusCode == "000") {
@@ -75,9 +77,8 @@ class Response
             return false;
         }
         foreach($this->actionList as $action) {
-            if ($action->responseCode != "0" &&
-                $action->responseCode != "00" &&
-                $action->responseCode != "000") {
+            $responseCode = strval($action->responseCode);
+            if (!in_array($responseCode, Configurations::getConfig("approved_codes"))) {
                 return false;
             }
         }
@@ -93,12 +94,85 @@ class Response
         if (sizeOf($this->actionList) == 0) {
             return false;
         }
-        if ($this->actionList[0]->responseCode != "0" &&
-            $this->actionList[0]->responseCode != "00" &&
-            $this->actionList[0]->responseCode != "000") {
-            return false;
+        if (isset($this->actionList[0]->responseCode)) {
+            $responseCode = strval($this->actionList[0]->responseCode);
+            if (in_array($responseCode, Configurations::getConfig("approved_codes"))) {
+                return true;
+            }
         }
-        return true;
+        return false;
+    }
+
+    /**
+     * Returns the transaction's response code.
+     *
+     * @return null|string The response code
+     */
+    public function getFirstRequestResponseCode() {
+        if (!isset($this->actionList[0]->responseCode)) {
+            return null;
+        }
+        return strval($this->actionList[0]->responseCode);
+    }
+
+    /**
+     * Returns the transaction's response description
+     *
+     * @return null|string The response description
+     */
+    public function getFirstRequestResponseText() {
+        if (!isset($this->actionList[0]->responseText)) {
+            return null;
+        }
+        return strval($this->actionList[0]->responseText);
+    }
+
+    /**
+     * Returns the transaction's txnID which can be used for refunds subsequently.
+     *
+     * @return null|string The transaction Id
+     */
+    public function getFirstRequestTxnId() {
+        if (!isset($this->actionList[0]->txnID)) {
+            return null;
+        }
+        return strval($this->actionList[0]->txnID);
+    }
+
+    /**
+     * Returns the preauthID which can be used for complete requests subsequently.
+     *
+     * @return null|string The preauthorisation Id
+     */
+    public function getFirstRequestPreauthId() {
+        if (!isset($this->actionList[0]->preauthID)) {
+            return null;
+        }
+        return strval($this->actionList[0]->preauthID);
+    }
+
+    /**
+     * Returns the customer reference number of the transaction which can be used to trigger payments at a later date.
+     *
+     * @return null|string The client Id or customer reference number
+     */
+    public function getFirstRequestClientId() {
+        if (!isset($this->actionList[0]->clientID)) {
+            return null;
+        }
+        return strval($this->actionList[0]->clientID);
+    }
+
+    /**
+     * Returns the token value of a customer's card which can be used to trigger payments at a later date.
+     *
+     * @return null|string The token value
+     */
+    public function getFirstRequestTokenValue() {
+        if (!isset($this->actionList[0]->tokenValue)) {
+            return null;
+        }
+        return strval($this->actionList[0]->tokenValue);
     }
 
     /**
