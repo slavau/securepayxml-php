@@ -90,7 +90,7 @@ class Response
      *
      * @return bool If first request has been approved.
      */
-    public function isFirstRequestApproved() {
+    public function isFirstItemApproved() {
         if (sizeOf($this->actionList) == 0) {
             return false;
         }
@@ -108,7 +108,7 @@ class Response
      *
      * @return null|string The response code
      */
-    public function getFirstRequestResponseCode() {
+    public function getFirstItemResponseCode() {
         if (!isset($this->actionList[0]->responseCode)) {
             return null;
         }
@@ -120,7 +120,7 @@ class Response
      *
      * @return null|string The response description
      */
-    public function getFirstRequestResponseText() {
+    public function getFirstItemResponseText() {
         if (!isset($this->actionList[0]->responseText)) {
             return null;
         }
@@ -132,7 +132,7 @@ class Response
      *
      * @return null|string The transaction Id
      */
-    public function getFirstRequestTxnId() {
+    public function getFirstItemTxnId() {
         if (!isset($this->actionList[0]->txnID)) {
             return null;
         }
@@ -144,7 +144,7 @@ class Response
      *
      * @return null|string The preauthorisation Id
      */
-    public function getFirstRequestPreauthId() {
+    public function getFirstItemPreauthId() {
         if (!isset($this->actionList[0]->preauthID)) {
             return null;
         }
@@ -156,7 +156,7 @@ class Response
      *
      * @return null|string The client Id or customer reference number
      */
-    public function getFirstRequestClientId() {
+    public function getFirstItemClientId() {
         if (!isset($this->actionList[0]->clientID)) {
             return null;
         }
@@ -168,7 +168,7 @@ class Response
      *
      * @return null|string The token value
      */
-    public function getFirstRequestTokenValue() {
+    public function getFirstItemTokenValue() {
         if (!isset($this->actionList[0]->tokenValue)) {
             return null;
         }
