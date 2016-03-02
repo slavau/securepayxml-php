@@ -2,6 +2,7 @@
 
 namespace SecurePay\XMLAPI\Requests\Payment\Txn;
 
+use SecurePay\XMLAPI\Requests\Payment\PaymentRequest;
 use SecurePay\XMLAPI\Utils\Configurations;
 use SecurePay\XMLAPI\Utils\Validation;
 
