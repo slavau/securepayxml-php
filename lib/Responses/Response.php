@@ -86,6 +86,18 @@ class Response
     }
 
     /**
+     * Returns the first item in the action list (will usually be the only..)
+     *
+     * @return null|\SimpleXMLElement
+     */
+    public function getFirstItem() {
+        if (sizeOf($this->actionList) == 0) {
+            return null;
+        }
+        return $this->actionList[0];
+    }
+
+    /**
      * Convenience function for checking to see if first action in the request has been approved.
      *
      * @return bool If first request has been approved.

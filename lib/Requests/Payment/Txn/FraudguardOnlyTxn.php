@@ -52,7 +52,7 @@ class FraudguardOnlyTxn extends Txn
 
     protected function txnReady()
     {
-        if (!isset($this->creditCardNo)) {
+        if (!isset($this->creditCardNo) || !isset($this->ipAddress)) {
             return false;
         }
         if (!$this->getRecurringFlag() && $this->getFormattedExpiryDate() == null) {

@@ -1,6 +1,7 @@
 <?php
 
 namespace SecurePay\XMLAPI\Requests\RequestTraits;
+use SecurePay\XMLAPI\Utils\Validation;
 
 /**
  * Encapsulates all Direct Entry traits.
@@ -50,7 +51,7 @@ trait DirectEntryTraits
      */
     public function setBsbNumber($bsbNumber)
     {
-        if (Validation::isValidBsbNumber($bsbNumber)) {
+        if (!Validation::isValidBsbNumber($bsbNumber)) {
             throw new \InvalidArgumentException("BSB Number must be 6 digits.");
         }
         $this->bsbNumber = $bsbNumber;
@@ -76,7 +77,7 @@ trait DirectEntryTraits
      */
     public function setAccountNumber($accountNumber)
     {
-        if (Validation::isValidAccountNumber($accountNumber)) {
+        if (!Validation::isValidAccountNumber($accountNumber)) {
             throw new \InvalidArgumentException("Account number must be between 1 and 9 digits.");
         }
         $this->accountNumber = $accountNumber;

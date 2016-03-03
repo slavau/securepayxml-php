@@ -205,7 +205,7 @@ class PaymentRequest extends Request
     const REFUND = "4";
     const PREAUTHORISE = "10";
     const COMPLETE = "11";
-    const FRAUDGUARD_ONLY = "12";
+    const FRAUDGUARD_ONLY = "22";
     const DE_DIRECT_DEBIT = "15";
     const DE_DIRECT_CREDIT = "17";
 
