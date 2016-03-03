@@ -5,14 +5,36 @@ Please visit https://www.securepay.com.au/ for further information regarding the
 
 To check service availability, please see - http://securepay.statuspage.io/
 
+Visit http://bengsspace.com/securepayxmlapi-php/docs/ for the API documentation.
 
 ## Table of contents
-----------
-[TOC]
+
+- [SecurePayXML-PHP](#)
+	- [Table of contents](#)
+	- [Installation](#)
+	- [Test details](#)
+	- [Examples](#)
+		- [Payment requests](#)
+			- [Once off payments](#)
+			- [Refunding payments](#)
+			- [Preauthorising cards](#)
+			- [Completing/capturing preauthorisations](#)
+			- [Direct debit](#)
+			- [Direct credit](#)
+			- [Fraudguard only](#)
+	- [Minimum message requirements](#)
+		- [Payment requests](#)
+			- [Once off payments - StandardPaymentTxn()](#)
+			- [Refunds - RefundTxn()](#)
+			- [Preauthorisations - PreauthoriseTxn()](#)
+			- [Completes / Captures - CompleteTxn()](#)
+			- [Direct Debits - DEDirectDebitTxn()](#)
+			- [Direct Credits - DEDirectCreditTxn()](#)
+			- [Fraudguard only - FraudguardOnlyTxn()](#)
 
 
 ## Installation
-----------
+
 This wrapper is only compatible with the Composer package manager.
 
 Run the following:
@@ -25,7 +47,7 @@ or add to your composer.json
      }
 
 ## Test details
-----------
+
 **API details**
 
     Merchant ID: ABC0001
@@ -45,7 +67,7 @@ or add to your composer.json
     CVV: 123 (Optional)
 
 ## Examples
-----------
+
 
 
 ### **Payment requests**
@@ -222,7 +244,7 @@ The below will process a transaction on the *test* environment with the test cre
         }
 
 ## Minimum message requirements
-----------
+
 
 ### **Payment requests**
 
