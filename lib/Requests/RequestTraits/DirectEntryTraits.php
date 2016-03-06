@@ -132,7 +132,7 @@ trait DirectEntryTraits
     /**
      * Generates an array with the DirectEntryInfo object.
      *
-     * @return An array with the DirectEntryInfo object
+     * @return array An array with the DirectEntryInfo object
      */
     public function generateDirectEntryInfo() {
         $ret = ["DirectEntryInfo" => []];

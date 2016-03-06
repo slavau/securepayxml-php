@@ -185,7 +185,7 @@ trait CreditCardTraits
     /**
      * Generates an array with the CreditCardInfo object.
      *
-     * @return An array with the CreditCardInfo object
+     * @return array An array with the CreditCardInfo object
      */
     public function generateCreditCardInfo() {
         $ret = ["CreditCardInfo" => []];

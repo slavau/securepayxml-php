@@ -262,18 +262,21 @@ class AddOngoingPaymentPeriodic extends Periodic
             $this->getNumberOfPayments() == null) {
             return false;
         }
-        if ($this->isUseCreditCard()) {
+        $accountTypeToCharge = $this->determineAccountType();
+        if ($accountTypeToCharge === parent::ACCOUNT_TYPE_CREDIT_CARD) {
             if ($this->expiryMonth == null ||
                 $this->expiryYear == null ||
                 $this->creditCardNo == null) {
                 return false;
             }
-        } else {
+        } else if ($accountTypeToCharge === parent::ACCOUNT_TYPE_DIRECT_ENTRY) {
             if ($this->getAccountName() == null ||
                 $this->getBsbNumber() == null ||
                 $this->getAccountNumber() == null) {
                 return false;
             }
+        } else {
+            return false;
         }
         return true;
     }
@@ -294,10 +297,14 @@ class AddOngoingPaymentPeriodic extends Periodic
         if ($this->getDayIntervals() != null) {
             $txnObj[] = ["periodicType" => "2"];
             $txnObj[] = ["paymentInterval" => $this->getDayIntervals()];
-        }
-        if ($this->useCreditCard) {
-            $txnObj[] = $this->generateCreditCardInfo();
         } else {
+            $txnObj[] = ["periodicType" => "3"];
+            $txnObj[] = ["paymentInterval" => $this->getScheduledInterval()];
+        }
+        $accountTypeToCharge = $this->determineAccountType();
+        if ($accountTypeToCharge === parent::ACCOUNT_TYPE_CREDIT_CARD) {
+            $txnObj[] = $this->generateCreditCardInfo();
+        } else if ($accountTypeToCharge === parent::ACCOUNT_TYPE_DIRECT_ENTRY) {
             $txnObj[] = $this->generateDirectEntryInfo();
         }
         return $txnObj;

@@ -299,7 +299,7 @@ trait FraudguardTraits
      * Generates an array with the BuyerInfo object which is used for Fraudguard.
      * Any values that are not set will not be included in the Fruadguard message.
      *
-     * @return An array with the BuyerInfo object
+     * @return array An array with the BuyerInfo object
      */
     public function generateBuyerInfo() {
         $ret = ["BuyerInfo" => []];

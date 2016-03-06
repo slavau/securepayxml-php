@@ -118,18 +118,21 @@ class AddPayorPeriodic extends Periodic
         if ($this->getAmount() == null) {
             return false;
         }
-        if ($this->isUseCreditCard()) {
+        $accountTypeToCharge = $this->determineAccountType();
+        if ($accountTypeToCharge === parent::ACCOUNT_TYPE_CREDIT_CARD) {
             if ($this->expiryMonth == null ||
                 $this->expiryYear == null ||
                 $this->creditCardNo == null) {
                 return false;
             }
-        } else {
+        } else if ($accountTypeToCharge === parent::ACCOUNT_TYPE_DIRECT_ENTRY) {
             if ($this->getAccountName() == null ||
                 $this->getBsbNumber() == null ||
                 $this->getAccountNumber() == null) {
                 return false;
             }
+        } else if ($accountTypeToCharge === parent::ACCOUNT_TYPE_UNIDENTIFIED) {
+            return false;
         }
         return true;
     }

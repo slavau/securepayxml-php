@@ -11,6 +11,11 @@ namespace SecurePay\XMLAPI\Requests\Periodic\PeriodicItem;
  */
 abstract class Periodic
 {
+    const ACCOUNT_TYPE_UNIDENTIFIED = 0;
+    const ACCOUNT_TYPE_CREDIT_CARD = 1;
+    const ACCOUNT_TYPE_DIRECT_ENTRY = 2;
+    const ACCOUNT_TYPE_BOTH = 3;
+
     /**
      * @var string The payor's reference number.
      */
@@ -56,6 +61,47 @@ abstract class Periodic
             return false;
         }
         return true;
+    }
+
+    /**
+     * Determines whether the transaction should be processed on a credit card or a direct debit account.
+     *
+     *
+     * @return int The account type that should be charged.
+     */
+    protected function determineAccountType() {
+        $ccFields = 0;
+        $deFields = 0;
+
+        if ($this->creditCardNo != null) {
+            $ccFields++;
+        }
+        if ($this->expiryMonth != null) {
+            $ccFields++;
+        }
+        if ($this->expiryYear != null) {
+            $ccFields++;
+        }
+
+        if ($this->getAccountName() != null) {
+            $deFields++;
+        }
+        if ($this->getAccountNumber() != null) {
+            $deFields++;
+        }
+        if ($this->getBsbNumber() != null) {
+            $deFields++;
+        }
+
+        if ($ccFields == 3 && $deFields == 3) {
+            return self::ACCOUNT_TYPE_BOTH;
+        } else if ($ccFields == 3) {
+            return self::ACCOUNT_TYPE_CREDIT_CARD;
+        } else if ($deFields == 3) {
+            return self::ACCOUNT_TYPE_DIRECT_ENTRY;
+        } else {
+            return self::ACCOUNT_TYPE_UNIDENTIFIED;
+        }
     }
 
     /**

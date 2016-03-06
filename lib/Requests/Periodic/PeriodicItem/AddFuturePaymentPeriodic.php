@@ -33,11 +33,6 @@ class AddFuturePaymentPeriodic extends Periodic
     protected $currency;
 
     /**
-     * @var bool Should be to determine whether the credit card number should be used (true - credit card, false - direct entry)
-     */
-    private $useCreditCard;
-
-    /**
      * @var \DateTime Should be the date of when the transaction will be processed
      */
     private $startDate;
@@ -45,7 +40,6 @@ class AddFuturePaymentPeriodic extends Periodic
     public function __construct()
     {
         parent::__construct();
-        $this->setUseCreditCard(true);
     }
 
     /**
@@ -102,28 +96,6 @@ class AddFuturePaymentPeriodic extends Periodic
     }
 
     /**
-     * Returns whether we should use credit card details or direct entry details. (true - credit card, false - direct entry)
-     *
-     * @return boolean Use credit card
-     */
-    public function isUseCreditCard()
-    {
-        return $this->useCreditCard;
-    }
-
-    /**
-     * Sets whether we should use the credit card details or direct entry details. (true - credit card, false - direct entry)
-     *
-     * @param boolean $useCreditCard Use credit card
-     * @return $this
-     */
-    public function setUseCreditCard($useCreditCard)
-    {
-        $this->useCreditCard = $useCreditCard;
-        return $this;
-    }
-
-    /**
      * Gets the date which the transaction will be processed in string form.
      *
      * @return string The processing date
@@ -158,18 +130,21 @@ class AddFuturePaymentPeriodic extends Periodic
             $this->getAmount() == null) {
             return false;
         }
-        if ($this->isUseCreditCard()) {
+        $accountTypeToCharge = $this->determineAccountType();
+        if ($accountTypeToCharge === parent::ACCOUNT_TYPE_CREDIT_CARD) {
             if ($this->expiryMonth == null ||
                 $this->expiryYear == null ||
                 $this->creditCardNo == null) {
                 return false;
             }
-        } else {
+        } else if ($accountTypeToCharge === parent::ACCOUNT_TYPE_DIRECT_ENTRY) {
             if ($this->getAccountName() == null ||
                 $this->getBsbNumber() == null ||
                 $this->getAccountNumber() == null) {
                 return false;
             }
+        } else {
+            return false;
         }
         return true;
     }
@@ -187,9 +162,10 @@ class AddFuturePaymentPeriodic extends Periodic
             "currency" => $this->getCurrency(),
             "startDate" => $this->getStartDate(),
             "periodicType" => "1"]; // value for scheduling a future payment
-        if ($this->useCreditCard) {
+        $accountTypeToCharge = $this->determineAccountType();
+        if ($accountTypeToCharge === parent::ACCOUNT_TYPE_CREDIT_CARD) {
             $txnObj[] = $this->generateCreditCardInfo();
-        } else {
+        } else if ($accountTypeToCharge === parent::ACCOUNT_TYPE_DIRECT_ENTRY) {
             $txnObj[] = $this->generateDirectEntryInfo();
         }
         return $txnObj;

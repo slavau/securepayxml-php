@@ -30,23 +30,25 @@ class EditPeriodic extends Periodic
     public function __construct()
     {
         parent::__construct();
-        $this->setUseCreditCard(true);
     }
 
     protected function periodicItemReady()
     {
-        if ($this->isUseCreditCard()) {
+        $accountTypeToCharge = $this->determineAccountType();
+        if ($accountTypeToCharge === parent::ACCOUNT_TYPE_CREDIT_CARD) {
             if ($this->expiryMonth == null ||
                 $this->expiryYear == null ||
                 $this->creditCardNo == null) {
                 return false;
             }
-        } else {
+        } else if ($accountTypeToCharge === parent::ACCOUNT_TYPE_DIRECT_ENTRY) {
             if ($this->getAccountName() == null ||
                 $this->getBsbNumber() == null ||
                 $this->getAccountNumber() == null) {
                 return false;
             }
+        } else if ($accountTypeToCharge === parent::ACCOUNT_TYPE_UNIDENTIFIED) {
+            return false;
         }
         return true;
     }
@@ -73,28 +75,6 @@ class EditPeriodic extends Periodic
         return $this;
     }
 
-    /**
-     * Returns whether we should use credit card details or direct entry details. (true - credit card, false - direct entry)
-     *
-     * @return boolean Use credit card
-     */
-    public function isUseCreditCard()
-    {
-        return $this->useCreditCard;
-    }
-
-    /**
-     * Sets whether we should use the credit card details or direct entry details. (true - credit card, false - direct entry)
-     *
-     * @param boolean $useCreditCard Use credit card
-     * @return $this
-     */
-    public function setUseCreditCard($useCreditCard)
-    {
-        $this->useCreditCard = $useCreditCard;
-        return $this;
-    }
-
     protected function getPeriodicItemType()
     {
         return "edit";
@@ -103,13 +83,9 @@ class EditPeriodic extends Periodic
     public function generateRequestObject()
     {
         $txnObj = ["actionType" => $this->getPeriodicItemType(),
-            "clientID" => $this->getClientId()];
-        if ($this->useCreditCard) {
-            $txnObj[] = $this->generateCreditCardInfo();
-        } else {
-            $txnObj[] = $this->generateDirectEntryInfo();
-        }
-
+            "clientID" => $this->getClientId(),
+            $txnObj[] = $this->generateCreditCardInfo(),
+            $txnObj[] = $this->generateDirectEntryInfo()];
         return $txnObj;
     }
 }
