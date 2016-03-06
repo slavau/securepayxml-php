@@ -41,7 +41,7 @@ abstract class Request
      * @param string $txnPassword
      * @param bool $testMode
      */
-    protected function __construct($merchantId, $txnPassword, $testMode)
+    protected function __construct($merchantId, $txnPassword, $testMode = false)
     {
         if (strlen($merchantId) != 5 && strlen($merchantId) != 7) {
             throw new \InvalidArgumentException("Merchant ID is neither 5 or 7 digits.");

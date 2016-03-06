@@ -25,9 +25,9 @@ class TriggerPeriodic extends Periodic
     protected $currency;
 
     /**
-     * @var string The transaction reference which will be recorded against the transaction.
+     * @var string The purchase order number which will be recorded against the transaction.
      */
-    protected $transactionReference;
+    protected $purchaseOrderNo;
 
     public function __construct()
     {
@@ -89,31 +89,31 @@ class TriggerPeriodic extends Periodic
     }
 
     /**
-     * Returns the transaction reference that will be recorded against a transaction.
+     * Returns the purchase order number that will be recorded against a transaction.
      *
-     * @return string The transaction reference
+     * @return string The purchase order number
      */
-    public function getTransactionReference()
+    public function getPurchaseOrderNo()
     {
-        return $this->transactionReference;
+        return $this->purchaseOrderNo;
     }
 
     /**
-     * Sets the transaction reference for a transaction. Will truncate anything after 60 characters.
+     * Sets the purchase order number for a transaction. Will truncate anything after 60 characters.
      *
-     * @param string $transactionReference The transaction reference
+     * @param string $purchaseOrderNo The purchase order number
      * @return $this
      */
-    public function setTransactionReference($transactionReference)
+    public function setPurchaseOrderNo($purchaseOrderNo)
     {
-        $this->transactionReference = Validation::getProperPurchaseOrderNo($transactionReference);
+        $this->purchaseOrderNo = Validation::getProperPurchaseOrderNo($purchaseOrderNo);
         return $this;
     }
 
     protected function periodicItemReady()
     {
         if ($this->getAmount() == null ||
-            $this->getTransactionReference() == null) {
+            $this->getPurchaseOrderNo() == null) {
             return false;
         }
         return true;
@@ -130,7 +130,7 @@ class TriggerPeriodic extends Periodic
                     "clientID" => $this->getClientId(),
                     "currency" => $this->getCurrency(),
                     "amount" => $this->getAmount(),
-                    "transactionReference" => $this->getTransactionReference()];
+                    "transactionReference" => $this->getPurchaseOrderNo()];
 
         return $txnObj;
     }

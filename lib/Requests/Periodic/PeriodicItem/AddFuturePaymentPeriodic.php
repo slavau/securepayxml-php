@@ -111,12 +111,19 @@ class AddFuturePaymentPeriodic extends Periodic
     /**
      * Sets the date which the transaction will be processed.
      *
-     * @param \DateTime $startDate The DateTime of when the transaction will be processed.
+     * @param string|\DateTime $startDate The DateTime of when the transaction will be processed.
      * @throws InvalidStartDateException When the start date is not a future date.
      * @return $this
      */
     public function setStartDate($startDate)
     {
+        if (is_string($startDate)) {
+            try {
+                $startDate = new \DateTime($startDate);
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
         if (!Validation::isDateInFuture($startDate)) {
             throw new InvalidStartDateException("Scheduled date is invalid. Must be in the future.");
         }

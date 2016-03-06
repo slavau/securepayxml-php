@@ -59,8 +59,12 @@ trait CreditCardTraits
         if (!Validation::validateCardDetails($creditCardNo == null ? $this->creditCardNo : $creditCardNo, $expiryMonth == null ? $this->expiryMonth : $expiryMonth, $expiryYear == null ? $this->expiryYear : $expiryYear, $cvv == null ? $this->cvv : $cvv)) {
             throw new \InvalidArgumentException("Invalid credit card details");
         }
-        if ($creditCardNo != null && !Validation::isSupportedCard($creditCardNo)) {
-            throw new CardTypeUnsupportedException("Card type is unsupported.");
+        if ($creditCardNo != null) {
+            $creditCardNo = str_replace(" ", "", $creditCardNo); // remove all spaces
+            $creditCardNo = str_replace("-", "", $creditCardNo); // remove all dashes
+            if (!Validation::isSupportedCard($creditCardNo)) {
+                throw new CardTypeUnsupportedException("Card type is unsupported.");
+            }
         }
         if ($creditCardNo != null)
             $this->creditCardNo = $creditCardNo;
@@ -87,6 +91,8 @@ trait CreditCardTraits
      */
     public function setCreditCardNo($creditCardNo)
     {
+        $creditCardNo = str_replace(" ", "", $creditCardNo); // remove all spaces
+        $creditCardNo = str_replace("-", "", $creditCardNo); // remove all dashes
         if (!Validation::validateCardDetails($creditCardNo, $this->expiryMonth, $this->expiryYear, $this->cvv)) {
             throw new \InvalidArgumentException("Invalid credit card number");
         }
