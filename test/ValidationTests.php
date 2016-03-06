@@ -290,4 +290,18 @@ class ValidationTests extends PHPUnit_Framework_TestCase
         $this->assertFalse(Validation::isDateInFuture($yesterday), "A date that is not in the future should fail");
     }
 
+    public function testIsValidClientId() {
+        $validClientId = "testClientId";
+        $invalidClientId1 = "test client id";
+        $invalidClientId2 = "";
+        $longClientId = "";
+        for($i = 0; $i < 22; $i++) {
+            $longClientId .= ".";
+        }
+
+        $this->assertTrue(Validation::isValidClientId($validClientId), "A client Id with no spaces and is between 1 - 20 characters should pass");
+        $this->assertFalse(Validation::isValidClientId($invalidClientId1), "A client Id with spaces should fail");
+        $this->assertFalse(Validation::isValidClientId($invalidClientId2), "An empty client Id should fail");
+        $this->assertFalse(Validation::isValidClientId($longClientId), "A client Id which exceeds 20 characters should fail.");
+    }
 }

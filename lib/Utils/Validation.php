@@ -318,4 +318,19 @@ class Validation
         }
         return true;
     }
+
+    /**
+     * Returns whether the client Id is valid based on the following:
+     * If the client Id is within 1 - 20 characters
+     * If the client Id does not include spaces.
+     *
+     * @param $clientId The client Id to check
+     * @return bool Whether the client Id is valid
+     */
+    public static function isValidClientId($clientId) {
+        if (strpos($clientId, " ") !== false || strlen($clientId) > 20 || strlen($clientId) < 1) {
+            return false;
+        }
+        return true;
+    }
 }

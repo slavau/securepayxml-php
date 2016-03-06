@@ -1,6 +1,7 @@
 <?php
 
 namespace SecurePay\XMLAPI\Requests\Periodic\PeriodicItem;
+use SecurePay\XMLAPI\Utils\Validation;
 
 /**
  * The base class for the periodic item.
@@ -46,6 +47,9 @@ abstract class Periodic
      */
     public function setClientId($clientId)
     {
+        if (!Validation::isValidClientId($clientId)) {
+            throw new \InvalidArgumentException("Client Id provided is invalid. Must be between 1 - 20 characters and not include spaces.");
+        }
         $this->clientId = $clientId;
         return $this;
     }
