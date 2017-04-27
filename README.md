@@ -1,3 +1,5 @@
+Unfortunately this project has been abandoned. Please feel free to fork it and continue to update it.
+
 # SecurePayXML-PHP
 A simple and easy to use PHP wrapper for the SecurePay XML API.
 
